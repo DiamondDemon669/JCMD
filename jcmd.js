@@ -45,22 +45,29 @@ class interpreter {
 	constructor(console) {
 		this.jcmd = console;
 		this.binder = {};
-		this.binder["$all"] = [function() { return null; }, this];
-		this.binder["$else"] = [function() { return null; }, this];
+		this.binder["$all"] = function() { return null; };
 	}
-	bind(command, callback, thisArg=this) {
-		this.binder[command] = [callback, thisArg];
+	bind(command, callback) {
+		this.binder[command] = callback;
 	}
 	unBind(command) {
 		this.binder[command] = undefined;
 	}
 	activate(event) {
 		if (this.jcmd.input.value in this.binder) {
-			this.binder[this.jcmd.input.value][0](this.binder[this.jcmd.input.value][1]);
-		} else if ("$all" in this.binder) {
-			this.binder["$all"][0](this.binder["$all"][1]);
+			this.binder[this.jcmd.input.value]();
 		} else {
-			this.binder["$else"][0](this.binder["$else"][1]);
+			for (var x in this.binder) {
+				var found = false;
+				if (x.includes("$else") && this.jcmd.input.value.includes(x.replace("$else", ""))) {
+					this.binder[x]();
+					found = true;
+					break
+				}
+			}
+			if (!found) {
+				this.binder["$all"]();
+			}
 		}
 	}
 }
