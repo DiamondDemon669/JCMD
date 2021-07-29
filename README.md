@@ -9,7 +9,7 @@ notes:
 ## Docs
 
 ### examples
-```
+```html
 <html><body>
 <div id="console"></div>
 <script src="jcmd.js"></script>
@@ -23,6 +23,21 @@ notes:
 </body></html>
 ```
 That example will echo any input you type in
+```html
+<html><body>
+<div id="console"></div>
+<script src="jcmd.js"></script>
+<script>
+  Window.addEventListener("load", function() {
+    let jc = new jcmd("console");
+    let jci = new interpreter(jc);
+    jci.bind("$all", function(thisArg) { thisArg.jcmd.output(thisArg.jcmd.input.value); }, jci);
+    jc.onInput(jci.activate.bind(jci));
+  });
+</script>
+</body></html>
+```
+That example does the same thing, but using interpreter class
 
 ### info
 the interpreter has a few more tricks up its sleeve
