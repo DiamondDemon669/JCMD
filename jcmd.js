@@ -14,9 +14,9 @@ class jcmd {
 		inputnode.style = "background-color: #0C0C0C; color: #CCCCCC"
 		var stylenode = document.createElement("style");
 		stylenode.innerHTML = "#JCMDinput:focus { outline: 0px; }";
-		this.console.appendChild(stylenode);
 		this.console.appendChild(labelnode);
 		this.console.appendChild(inputnode);
+		this.console.appendChild(stylenode);
 		this.prompter = document.getElementById("JCMDlabel");
 		this.input = document.getElementById("JCMDinput");
 	}
