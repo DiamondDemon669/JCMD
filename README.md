@@ -31,13 +31,29 @@ That example will echo any input you type in
   Window.addEventListener("load", function() {
     let jc = new jcmd("console");
     let jci = new interpreter(jc);
-    jci.bind("$all", function(thisArg) { thisArg.jcmd.output(thisArg.jcmd.input.value); }, jci);
+    jci.bind("$all", function() { this.jcmd.output(this.jcmd.input.value); }.bind(jci));
     jc.onInput(jci.activate.bind(jci));
   });
 </script>
 </body></html>
 ```
 That example does the same thing, but using interpreter class
+```html
+<html><body>
+<div id="console"></div>
+<script src="jcmd.js"></script>
+<script>
+  Window.addEventListener("load", function() {
+    let jc = new jcmd("console");
+    let jci = new interpreter(jc);
+    jci.bind("$all", function() { this.jcmd.output("this is what happens when any value is input"); }.bind(jci));
+    jci.bind("/$else", function() { this.jcmd.output("this is what happens when any value starting with / is input"); }.bind(jci));
+    jc.onInput(jci.activate.bind(jci));
+  });
+</script>
+</body></html>
+```
+That example uses the new $else preset
 
 ### info
 the interpreter has a few more tricks up its sleeve
@@ -102,9 +118,9 @@ an asociative array containing the clear parameter of jcmd.constructor
 initialized the interpreter
 
 
-#### bind(command, callback, thisArg=this)
+#### bind(command, function.bind())
 
-calls callback(thisArg) when command is input
+calls function() when command is input
 
 
 #### unBind(command)
@@ -119,11 +135,11 @@ starts the interpreter. dont use the activate function directly, instead use lik
 jcmd.onInput(interpreter.activate.bind(interpreter))
 ```
 
-jcmd
+#### jcmd
 
 just stores the jcmd object you input in interpreter.constructor
 
 
-binder
+#### binder
 
-stores the commands, callbacks and thisArg's to all the commands you binded
+stores the commands and callbacks to all the commands you binded
