@@ -3,8 +3,7 @@
 This is a simple javascript terminal. you can use the jcmd or interpreter classes to fully customize this console
 
 notes:
-1. the jcmd.clear function is not functioning properly
-2. to create a jcmd object, the page must be loaded
+1. to create a jcmd object, the page must be loaded
 
 ## Docs
 
