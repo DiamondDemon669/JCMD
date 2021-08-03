@@ -13,7 +13,7 @@ notes:
 <div id="console"></div>
 <script src="jcmd.js"></script>
 <script>
-  Window.addEventListener("load", function() {
+  window.addEventListener("load", function() {
     let jc = new jcmd("console", height="400px", width="75%");
     var echo = function(jc) { jc.output(jc.input.value); };
     jc.onInput(echo.bind(jc));
@@ -27,11 +27,9 @@ That example will echo any input you type in
 <div id="console"></div>
 <script src="jcmd.js"></script>
 <script>
-  Window.addEventListener("load", function() {
-    let jc = new jcmd("console");
-    let jci = new interpreter(jc);
-    jci.bind("$all", function() { this.jcmd.output(this.jcmd.input.value); }.bind(jci));
-    jc.onInput(jci.activate.bind(jci));
+  window.addEventListener("load", function() {
+    let jci = new interpreter("console");
+    jci.bind("$all", function() { this.output(this.input.value); }.bind(jci));
   });
 </script>
 </body></html>
@@ -42,17 +40,29 @@ That example does the same thing, but using interpreter class
 <div id="console"></div>
 <script src="jcmd.js"></script>
 <script>
-  Window.addEventListener("load", function() {
-    let jc = new jcmd("console");
-    let jci = new interpreter(jc);
-    jci.bind("$all", function() { this.jcmd.output("this is what happens when any value is input"); }.bind(jci));
-    jci.bind("/$else", function() { this.jcmd.output("this is what happens when any value starting with / is input"); }.bind(jci));
-    jc.onInput(jci.activate.bind(jci));
+  window.addEventListener("load", function() {
+    let jci = new interpreter("console");
+    jci.bind("$all", function() { this.output("this is what happens when any value is input"); }.bind(jci));
+    jci.bind("/$else", function() { this.output("this is what happens when any value starting with / is input"); }.bind(jci));
   });
 </script>
 </body></html>
 ```
 That example uses the new $else preset
+```html
+<html><body>
+<div id="console"></div>
+<script src="jcmd.js"></script>
+<script>
+  window.addEventListener("load", function() {
+    let jci = new interpreter("console");
+    jci.bind("$all", function() { this.output(this.input.value); }.bind(jci));
+    jci.bind("/setprompt $else", function() { this.setPrompt = this.input.value.split(" ")[1] + " "; });
+  });
+</script>
+</body></html>
+```
+That example uses the $else preset to allow arguments for the /setprompt command shown
 
 ### info
 the interpreter has a few more tricks up its sleeve
@@ -111,10 +121,10 @@ the label element next to jcmd.input
 an asociative array containing the clear parameter of jcmd.constructor
 
 
-### class interpreter
-#### constructor(jcmd)
+### class interpreter extends jcmd
+#### constructor()
 
-initialized the interpreter
+initialized the interpreter and binds activate function to jcmd.onInput
 
 
 #### bind(command, function.bind())
@@ -127,16 +137,13 @@ calls function() when command is input
 unbinds a callback
 
 
-#### activate(event)
+#### activate()
 
-starts the interpreter. dont use the activate function directly, instead use like this
-```
-jcmd.onInput(interpreter.activate.bind(interpreter))
-```
+starts the interpreter. dont use this function, it is already running
 
-#### jcmd
+#### fdata
 
-just stores the jcmd object you input in interpreter.constructor
+stores any data you want to put in here, will be global for any function using interpreter as this
 
 
 #### binder
